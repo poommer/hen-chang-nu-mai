@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+  @layer base {
+    @font-face {
+        font-family: 'LINE-Seed-Sans-TH';
+        src: url('LINESeedSansTH_W_Rg.woff') format('woff'), /* ไฟล์ฟอนต์ในรูปแบบ woff2 */
+      }
+
+      body{
+        font-family: 'LINE-Seed-Sans-TH';
+      }
+  }
