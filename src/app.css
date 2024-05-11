@@ -6,7 +6,8 @@
   @layer base {
     @font-face {
         font-family: 'LINE-Seed-Sans-TH';
-        src: url('LINESeedSansTH_W_Rg.woff') format('woff'), /* ไฟล์ฟอนต์ในรูปแบบ woff2 */
+        src: url('/LINESeedSansTH_W_Rg.woff') 
+        format('woff') /* ไฟล์ฟอนต์ในรูปแบบ woff2 */
       }
 
       body{
