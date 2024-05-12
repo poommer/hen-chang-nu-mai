@@ -2,11 +2,15 @@
     import Header from "../lib/header.svelte";
     import MostDtc from "../lib/mostDtc.svelte"
     import Device from "../lib/device.svelte";
+    import History from "../lib/history.svelte";
+    import Export from "../lib/export.svelte";
 
     let compoCurrant = 1
 
+   
 
 </script>
+
 
 <div class="w-full">
     <header class="sticky top-0">
@@ -14,7 +18,7 @@
     </header>
     
 
-    <main class="w-full h-full fixed flex flex-col  items-center p-10 ">
+    <main class="w-full h-full flex flex-col  items-center p-10 ">
         
         <div class="mainContent w-[70%] min-h-[80%]" >
             <div class="grounp-tap w-[100%]  flex place-items-end gap-1 pl-1">
@@ -32,7 +36,7 @@
         
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img src="https://cdn-icons-png.flaticon.com/128/2025/2025523.png" class="w-[30px] mr-1">
-                    last detected!
+                    history
             </button>
              <button class={compoCurrant === 3?
             "bg-white text-[#2b40a0] h-[3rem] w-[12rem] relative flex items-center justify-center  text-[18px] font-bold p-[0.25rem] rounded-t-[0.5rem] border-x-[#468999] border-t-[#468999] border-x-[.1rem] border-t-[.1rem]   after:contents-[''] after:w-full after:h-1  after:bg-white after:absolute after:bottom-[-1px]":"flex items-center justify-center  text-[16px] w-[10rem] font-bold p-[0.25rem] rounded-t-[0.5rem] bg-[#468999] text-white"}  type="button" on:click={() => {compoCurrant = 3}}>
@@ -59,13 +63,13 @@
 
                 {:else if compoCurrant === 2}
                     <h1>latest Detected</h1>
-
+                    <History />
                 {:else if compoCurrant === 3}
                     
                     <Device />
                 {:else if compoCurrant === 4}
                     <h1>export</h1>
-
+                    <Export />
                 {:else}
                     <h1>error</h1>
                 {/if}
@@ -74,6 +78,7 @@
         </div>
             
     </main>
+
 
 </div>
 

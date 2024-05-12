@@ -182,8 +182,6 @@ async function GetDataTab1(Start,End){
 }
 
 
-GetDataTab1(setDateFilter.Start,setDateFilter.End)
-
 
 function btnRangeCustom() {
     statusLoadTab1 = false;
