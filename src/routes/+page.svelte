@@ -3,7 +3,7 @@
     import MostDtc from "../lib/mostDtc.svelte"
     import Device from "../lib/device.svelte";
     import History from "../lib/history.svelte";
-    import Export from "../lib/export.svelte";
+    import FormExport from "../lib/formExport.svelte";
 
     let compoCurrant = 1
 
@@ -62,14 +62,13 @@
                     
 
                 {:else if compoCurrant === 2}
-                    <h1>latest Detected</h1>
                     <History />
                 {:else if compoCurrant === 3}
                     
                     <Device />
                 {:else if compoCurrant === 4}
                     <h1>export</h1>
-                    <Export />
+                    <FormExport />
                 {:else}
                     <h1>error</h1>
                 {/if}

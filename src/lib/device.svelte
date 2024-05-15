@@ -5,6 +5,7 @@ import TimePeriod from './chartAndMaps/timePeriod.svelte';
 import Predition from './chartAndMaps/predition.svelte';
 import DayChart from './chartAndMaps/dayChart.svelte';
 import TimeChart from './chartAndMaps/timeChart.svelte'
+import Export from './export.svelte';
 
 let DataListAll = [];
 let DataListAllStatusLoad = null;
@@ -220,7 +221,7 @@ async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, f
         else{
           if (filter_TimePeriod === 'All'){
             var query = response.filter((val) => {
-              return val.DvID === filter_DeviceID;
+              return val.DvID === filter_DeviceID && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') >= dateStart && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') <= dateEnd ;
             });
           query.forEach(async (val) => {
             // timePeriod
@@ -294,7 +295,7 @@ async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, f
     
           else{
             var query = response.filter((val) => {
-              return val.timePeriod === filter_TimePeriod && val.DvID === filter_DeviceID;
+              return val.timePeriod === filter_TimePeriod && val.DvID === filter_DeviceID  && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') >= dateStart && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') <= endDate;
             });
     
             query.forEach(async (val) => {
@@ -453,8 +454,7 @@ async function filterData() {
             }else if(Night){
             Datafilter = await getAllData('', '', 'Night', currantMaps)
             }
-            DataListAll = [Datafilter]
-            DataListAllStatusLoad = true
+            
         }
         
         
@@ -462,7 +462,8 @@ async function filterData() {
             
         
     }
-    
+            sDataListAll = [Datafilter]
+            DataListAllStatusLoad = true
 
     
     console.log(DataListAll);
@@ -501,8 +502,8 @@ async function filterData() {
                     class="w-[30px]">
                 information
             </h2>
-            <!-- <button class="shadow-[1px_1px_3px_.5px_#7f7f7fb3] p-[.25rem] rounded-[.25rem]" on:click={()=>{cleckFilter = !cleckFilter}}><img src="https://cdn-icons-png.flaticon.com/128/10833/10833610.png" alt="" class="w-[30px]"></button>
-      -->  </div> 
+            
+          </div> 
        
 
 
@@ -537,8 +538,12 @@ async function filterData() {
                 <div class="text-2xl">loading...</div>
             </div>
         {:else if DataListAllStatusLoad === true}
-            <h1>loaded!</h1>
-            <div class=" bg-[#ebebeb] p-[.5rem] w-[100%] rounded-[.5rem] border-b-[2px] border-b-[#468999] text-[#686868]  groupFilter-item">
+            <div class="flex justify-end items-center gap-2">
+              <Export DvID={currantMaps}  />
+            </div>
+            
+
+            <div class=" bg-[#ebebeb] p-[.5rem] w-[100%] rounded-[.5rem] border-b-[2px] border-b-[#468999] text-[#686868]  mt-2">
                 <div id="group-filterDate" class="flex justify-between gap-1">
                     <div class="flex flex-col">
                         <label for="filter-DateSt">Date start:</label>

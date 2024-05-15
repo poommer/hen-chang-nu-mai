@@ -2,6 +2,7 @@
 import moment from 'moment-timezone';
 import ChartDay from './chartMost/chartDay.svelte';
 import ChartPeriod from './chartMost/chartPeriod.svelte';
+import Export from './export.svelte';
 import { onMount } from 'svelte';
 
 let stDateRange; 
@@ -12,6 +13,8 @@ let setDateFilter = {Start:moment().tz('Asia/Bangkok').clone().add(0, 'days').fo
 let statusLoadTab1 = false
 let DataSetMost = []
 
+let Idexport;
+let NewDataStatus = false
 
     onMount(
         async () => {
@@ -173,6 +176,8 @@ async function GetDataTab1(Start,End){
         console.log('Loaded');
         statusLoadTab1 = true
         DataSetMost = [data]
+        if(Object.keys(data.newData).length !== 0){Idexport = data.newData.infoDv.DvId; NewDataStatus = true}
+        
         console.log(DataSetMost);
         return data
 
@@ -330,7 +335,8 @@ function btnRangeCustom() {
                                             
                                                 date range
                                         </h2>
-                                        <p class="text-[14px] text-zinc-400">date range:{valrangeD} <br>[from 2024-05-09 to 2024-05-09]</p>
+                                       
+                                       
                                         <div class="flex flex-col">
                                             <label for="dateRange">date range</label>
                                             <select name="dateRange" id="dateRange" class="outline-none h-[40px] text-[16px] border-[1px] border-[#468999] rounded-[5px]" on:change={changeRangeDate} bind:value={valrangeD}>
@@ -374,7 +380,11 @@ function btnRangeCustom() {
 
 
                     <div class="box-2 w-6/12 min-h-full flex flex-col gap-3">
-                        
+                         {#if NewDataStatus}
+                         <div class="flex gap-2 justify-end items-center">
+                            <Export DvID={Idexport} />
+                        </div>
+                    {/if}
                         <div class="card w-full h-[50%] flex flex-col justify-between  bg-white p-[0.5rem] rounded-[10px] shadow-[0_0_5px_.5px_#7f7f7fb3]">
                             <h2 class="flex items-center text-2xl  text-sky-500 font-bold">
                             <img
