@@ -5,8 +5,8 @@ import ChartPeriod from './chartMost/chartPeriod.svelte';
 import Export from './export.svelte';
 import { onMount } from 'svelte';
 
-let stDateRange; 
-let endDateRange;
+let stDateRange = moment().tz('Asia/Bangkok').format('YYYY-MM-DD'); 
+let endDateRange = moment().tz('Asia/Bangkok').format('YYYY-MM-DD');
 let valrangeD = 'Today';
 let setDateFilter = {Start:moment().tz('Asia/Bangkok').clone().add(0, 'days').format('YYYY-MM-DD'), End:moment().tz('Asia/Bangkok').clone().add(0, 'days').format('YYYY-MM-DD')};
 
@@ -18,7 +18,7 @@ let NewDataStatus = false
 
     onMount(
         async () => {
-        await GetDataTab1();
+        await GetDataTab1(stDateRange, endDateRange);
     }
     )
     

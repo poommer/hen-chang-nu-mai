@@ -450,7 +450,7 @@
     
       // The map, centered at Uluru
       map = new Map(document.getElementById("map"), {
-        zoom: 5,
+        zoom: 6.5,
         center: position,
         mapId: "802dff93db0ce925",
       });
@@ -468,7 +468,7 @@
         let marker = new google.maps.Marker({
             position: val.pos,
             map: map,
-            title: val.DvId
+            title: `${val.DvId} | ${val.address}`
         });
       
         marker.addListener('click',async  function() { 

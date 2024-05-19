@@ -12,15 +12,16 @@ let DataListAllStatusLoad = null;
 let currantMaps;
 let setLavalSce;
 
-let stDate;
-let endDate;
+let stDate = null;
+let endDate = null;
 let Day = false
 let Night = false
 let btnActive = false
 
 async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, filter_DeviceID) {
-        let dateStart = filter_dateStart === ''? moment(filter_dateStart).tz('Asia/Bangkok').format('YYYY-MM-DD') : '';
-        let dateEnd = filter_dateEnd === '' ? moment(filter_dateEnd).tz('Asia/Bangkok').format('YYYY-MM-DD') : '';
+        DataListAllStatusLoad = false
+        let dateStart = filter_dateStart !== null? moment(filter_dateStart).tz('Asia/Bangkok').format('YYYY-MM-DD') : null;
+        let dateEnd = filter_dateEnd !== null ? moment(filter_dateEnd).tz('Asia/Bangkok').format('YYYY-MM-DD') :null;
     
         let FormatDataDay = { total: 0 }
         let FormatDataTime = {
@@ -59,8 +60,8 @@ async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, f
         })
         
     
-        if(filter_dateStart === '' || filter_dateEnd === ''){
-          if (filter_TimePeriod === 'All'){
+        if(filter_dateStart === null || filter_dateEnd === null){
+          if (filter_TimePeriod.every(time => time.status === true) || filter_TimePeriod.every(time => time.status === false)){
             var query = response.filter((val) => {
               return val.DvID === filter_DeviceID;
             });
@@ -141,7 +142,8 @@ async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, f
     
           else{
             var query = response.filter((val) => {
-              return val.timePeriod === filter_TimePeriod && val.DvID === filter_DeviceID;
+              console.log(filter_TimePeriod.some(time => time.status === true && val.timePeriod === time.lable));
+              return filter_TimePeriod.some(time => time.status === true && val.timePeriod === time.lable) && val.DvID === filter_DeviceID;
             });
     
             query.forEach(async (val) => {
@@ -219,7 +221,8 @@ async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, f
         }
     
         else{
-          if (filter_TimePeriod === 'All'){
+          console.log('else');
+          if (filter_TimePeriod.every(time => time.status === true) || filter_TimePeriod.every(time => time.status === false)){
             var query = response.filter((val) => {
               return val.DvID === filter_DeviceID && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') >= dateStart && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') <= dateEnd ;
             });
@@ -295,7 +298,7 @@ async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, f
     
           else{
             var query = response.filter((val) => {
-              return val.timePeriod === filter_TimePeriod && val.DvID === filter_DeviceID  && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') >= dateStart && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') <= endDate;
+              return filter_TimePeriod.some(time => time.status === true && val.timePeriod === time.lable) && val.DvID === filter_DeviceID  && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') >= dateStart && moment(val.date).tz('Asia/Bangkok').format('YYYY-MM-DD') <= endDate;
             });
     
             query.forEach(async (val) => {
@@ -374,17 +377,30 @@ async function getAllData(filter_dateStart, filter_dateEnd, filter_TimePeriod, f
         ['Day','Night'].forEach((val) => {
           dataEx.getTimePeriod.dataset.push(formatTimePeriod[val])
         } )
+
+
       
     
     
         // ==============================================================================================================
     
         // let secLev = setSecuritylevel(dataEx.getTime)
+      if(dataEx.getDay.dataset.length < 1){
+        DataListAllStatusLoad = null
+        stDate = null;
+        endDate = null;
+        Day = false;
+        Night = false;
+
+      } else{
+          DataListAllStatusLoad = true
+        }
+      DataListAll = [dataEx]
       
       
-      
-        return dataEx;
+      return dataEx;
       }
+
 
   // ฟังก์ชันที่ใช้ในการรับค่าจาก Maps component
   function handleDataListAll(value) {
@@ -431,46 +447,8 @@ function checkEndDate(startDate, endDate) {
     } 
   }
 
-async function filterData() {
-    DataListAllStatusLoad = false
-    let Datafilter;
-    if((stDate !== undefined && stDate !== null && stDate !== '' ) && (endDate !== undefined && endDate !== null && endDate !== '')){
-        if( Day && Night){
-        Datafilter = await getAllData(stDate, endDate, 'All', currantMaps)
-        } else if(Day){
-         Datafilter = await getAllData(stDate, endDate, 'Day', currantMaps)
-        }else if(Night){
-         Datafilter = await getAllData(stDate, endDate, 'Night', currantMaps)
-        }
-    
-    }else{
-        if( !Day && !Night){
-           DataListAllStatusLoad = Error
-        } else{
-            if(Day && Night){
-                 Datafilter = await getAllData('', '', 'All', currantMaps)
-            }else if(Day){
-            Datafilter = await getAllData('', '', 'Day', currantMaps)
-            }else if(Night){
-            Datafilter = await getAllData('', '', 'Night', currantMaps)
-            }
-            
-        }
-        
-        
-
-            
-        
-    }
-            sDataListAll = [Datafilter]
-            DataListAllStatusLoad = true
-
-    
-    console.log(DataListAll);
 
 
-    
-}
 
 </script>
 
@@ -538,10 +516,7 @@ async function filterData() {
                 <div class="text-2xl">loading...</div>
             </div>
         {:else if DataListAllStatusLoad === true}
-            <div class="flex justify-end items-center gap-2">
-              <Export DvID={currantMaps}  />
-            </div>
-            
+
 
             <div class=" bg-[#ebebeb] p-[.5rem] w-[100%] rounded-[.5rem] border-b-[2px] border-b-[#468999] text-[#686868]  mt-2">
                 <div id="group-filterDate" class="flex justify-between gap-1">
@@ -557,8 +532,8 @@ async function filterData() {
 
                     <div class="flex flex-col ">
                         <label for="">timePr</label>
-                        <div class="flex">
-                            <label for="filter-day" class={Day ? "bg-[#F3CF29] text-[#468999] p-[0.25rem] cursor-pointer ml-[0.5rem] rounded-[.25rem]":"bg-white p-[0.25rem] cursor-pointer  rounded-[.25rem]"}>
+                        <div class="flex gap-2">
+                            <label for="filter-day" class={`p-[0.25rem] cursor-pointer rounded-[.25rem] ${Day ? "bg-[#F3CF29] text-[#468999] " : "bg-white p-[0.25rem] "}`}>
                                 <input type="checkbox" name="filter-timePr" id="filter-day" value="Day"
                                     style="display: none;" bind:checked={Day} on:change={()=>{
                                         if((stDate === '' || stDate === undefined || stDate === null || stDate !== '') && (endDate === '' || endDate === undefined || endDate === null || endDate !== '') || (Day || Night)){
@@ -570,7 +545,7 @@ async function filterData() {
                                 Day
                             </label>
 
-                            <label for="filter-night" class={Night ? "bg-[#F3CF29] text-[#468999] p-[0.25rem] cursor-pointer  rounded-[.25rem]":"bg-white p-[0.25rem] cursor-pointer ml-[0.5rem] rounded-[.25rem]"}>
+                            <label for="filter-night" class={`p-[0.25rem] cursor-pointer rounded-[.25rem] ${Night ? "bg-[#F3CF29] text-[#468999] " : "bg-white p-[0.25rem] "}`}>
                                 <input type="checkbox" name="filter-timePr" id="filter-night" value="Night"
                                     style="display: none;" bind:checked={Night} on:change={()=>{
                                         if((stDate === '' || stDate === undefined || stDate === null || stDate !== '') && (endDate === '' || endDate === undefined || endDate === null || endDate !== '') || (Day || Night)){
@@ -587,7 +562,7 @@ async function filterData() {
                        
                     </div>
                     <div class="flex flex-col gap-[0.2rem]">
-                        <button class="w-[4.3rem] bg-[#468999] ml-2 p-[0.25rem] cursor-pointer rounded-[.25rem] text-white disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-default" id="btn-filter" disabled on:click={filterData}>ค้นหา</button>
+                        <button class="w-[4.3rem] bg-[#468999] ml-2 p-[0.25rem] cursor-pointer rounded-[.25rem] text-white disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-default" id="btn-filter" disabled on:click={() => {getAllData(stDate, endDate, [{lable:'Day', status:Day}, {lable:'Night', status:Night}], currantMaps)}}>ค้นหา</button>
                         <button type="reset" class="w-[4.3rem] bg-[#ffffff] ml-2 p-[0.25rem] cursor-pointer rounded-[.25rem] text-[#468999] border-[#468999] border-[1px] disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-default" on:click={()=>{
                             Night = false
                             Day = false

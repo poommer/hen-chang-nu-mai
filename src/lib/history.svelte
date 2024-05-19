@@ -17,6 +17,14 @@
 
     let textFrom;
 
+    var newLatest = null ;
+var newLatestD = null ;
+
+var countUpdate = 0;
+let updateData = undefined;
+
+let statusUpdateLoad = false;
+
     async function getData() { 
         console.log('loading data');
         const response = await fetch('https://script.google.com/macros/s/AKfycbxMioYOWhkiyVSAKgRcSVyVNmXr5YUXzTPakbeQzv6sO-7xJ2wY6k0eB9IRvI0lCkbe/exec');
@@ -27,8 +35,27 @@
        
         let data = await response.json();
         data = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); 
-        dataList = data
+        if(newLatest === null && newLatestD === null){
+            newLatest = data[0].timestamp
+            newLatestD = data[0].DvID
+          } 
+          else if (newLatest !== data[0].timestamp && newLatestD !== data[0].DvID){
+            // $('#update-gif').hide();
+             newLatest = data[0].timestamp
+            newLatestD = data[0].DvID
+            updateData = true
+            countUpdate += 1
+          }
+
+
+        if(dataList === undefined || statusUpdateLoad === true){
+            dataList = data
+        }
+        // console.log(dataList.length);
+        
+        // console.log(dataList.length);
         console.log('loaded data');
+        console.log({newLatest, newLatestD});
         statusLoad = true
     }
 
@@ -40,7 +67,7 @@ async function pagination(pagenum){
         await getData()
     }
     const page = parseInt(pagenum)
-    const numberPage = 10;
+    const numberPage = 50;
     let totalPage =  dataList.length/numberPage
     
     let res = []
@@ -58,11 +85,16 @@ async function pagination(pagenum){
     // console.log({totalPage, page, start, end, result});
      menuData = {totalPage, page, start, end, result}
      dataset = menuData.result
-     console.log(menuData)
-     console.log(dataset);
+console.log(dataList);
      textFrom = `data: ${menuData.start + 1} - ${menuData.end} from ${dataList.length} | page: ${pageCur} of ${totalPage}`
-     console.log(textFrom);
 
+}
+
+async function loadNewData() {
+    statusUpdateLoad = true
+    updateData= undefined;
+    await getData()
+    pagination(pageCur)
 }
 
 
@@ -89,6 +121,15 @@ pagination(pageCur)
     console.log(DataPagination);
 })
 
+setInterval(async () => {
+    await getData()
+    pagination(pageCur)
+    console.log(updateData);
+  }, 20000);
+
+
+
+  
 
 </script>
 
@@ -105,9 +146,19 @@ pagination(pageCur)
 
 {:else}
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4" id="showData">
     <div>
-        <div class="w-full flex justify-end items-end p-2 text-zinc-600"><h1>{textFrom}</h1></div>
+        <div class={`w-full flex ${updateData === true? 'justify-between' : 'justify-end'}  items-end p-2 text-zinc-600`}>
+            {#if updateData === true}
+            <div class="flex justify-center items-center gap-2">
+                 <h1 class="text-rose-600 font-bold">new detected {countUpdate}</h1>
+                <button class="p-1 rounded bg-slate-400 text-slate-700" on:click={loadNewData}>reload</button>
+            </div>
+               
+            {/if}
+            
+            <h1>{textFrom}</h1>
+        </div>
         <table class="w-full rounded-[.5rem] overflow-hidden shadow-[2px_2px_5px_.5px_#7f7f7fb3]">
             <thead class="text-left bg-[#468999] text-white text-lg">
                 <th class="p-2">#</th>
@@ -140,6 +191,7 @@ pagination(pageCur)
                     <button class={`rounded-[.25rem] text-lg w-8 h-8 ${pageCur === itemNum ? 'bg-slate-600 text-gray-200' : 'text-slate-500 bg-white border-[1px] border-slate-500'}` } on:click={ () =>{
                 pageCur = itemNum
                 pagination(itemNum)
+                document.getElementById('main').scrollTop = 0
                 }}>{itemNum}</button>
         {/each}
         <button class={`rounded-[.25rem] text-lg w-8 h-8  ${groupIndex+1 !== cateGroup.length ? ' bg-neutral-500 text-white ' : 'bg-slate-200 text-white'} disabled:cursor-default`} disabled={groupIndex+1 === cateGroup.length ? true : false} on:click={() => {if(groupIndex+1 !== cateGroup.length) {currantMenu += 1} }}>{'>'}</button>

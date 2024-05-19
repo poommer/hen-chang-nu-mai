@@ -61,8 +61,7 @@ function downloadExcel() {
 </script>
 
 
-    <button on:click={downloadJson}  class="w-[5rem] p-1 cursor-pointer border-2 border-neutral-600 rounded ">JSON</button>
-    <button on:click={downloadCSV} class="w-[5rem] p-1 cursor-pointer border-2 border-neutral-600 rounded">CSV</button>
-    <button on:click={downloadExcel} class="w-[5rem] p-1 cursor-pointer border-2 border-neutral-600 rounded" disabled>Excel</button>
-
+    <button on:click={downloadJson}  class="w-[10rem] p-1 cursor-pointer border-2 border-neutral-600 rounded text-xl text-neutral-700">JSON</button>
+    <button on:click={downloadCSV} class="w-[10rem] p-1 cursor-pointer border-2 border-neutral-600 rounded text-xl text-neutral-700">CSV</button>
+   
     <!-- <FormExport /> -->

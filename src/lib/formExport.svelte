@@ -1,7 +1,7 @@
 <script>
 import Export from "./export.svelte";
 import moment from 'moment-timezone';
-let currantPage = 3
+let currantPage = 1
 
 let DvIdList = []
 
@@ -230,8 +230,9 @@ getDeviceData()
     
     {:else}
     <div class="w-full  h-[30rem] flex flex-col justify-center items-center gap-4">
-        <h1 class="text-3xl font-bold">success, Your data is ready to be exported.</h1>
-        <p class=" text-lg">Please Click on the file button you want to download.</p>
+        <img src="https://i.pinimg.com/originals/6d/1d/a8/6d1da812e9c795eb5b2f4e8807d87014.gif" alt="" class="w-[10rem]">
+        <h1 class="text-3xl font-bold text-lime-700">success, Your data is ready to be exported.</h1>
+        <p class=" text-lg text-gray-500">Please Click on the file button you want to download.</p>
         
 
         <div>
@@ -261,3 +262,4 @@ getDeviceData()
         }) 
         }}>done</button>
 </div>
+

@@ -13,7 +13,7 @@
 
 
 <div class="w-full">
-    <header class="sticky top-0">
+    <header class="sticky top-0 z-50">
         <Header></Header>
     </header>
     
@@ -56,7 +56,7 @@
            
             </div>
 
-            <div class="mainContent h-[45rem] bg-white border-[#468999] border-[1px] p-[0.5rem] overflow-y-auto">
+            <div class="mainContent h-[45rem] bg-white border-[#468999] border-[1px] p-[0.5rem] overflow-y-auto" id="main">
                 {#if compoCurrant === 1 }
                     <MostDtc></MostDtc>
                     
