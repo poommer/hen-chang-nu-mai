@@ -2,7 +2,7 @@
 import moment from 'moment-timezone';
 import ChartDay from './chartMost/chartDay.svelte';
 import ChartPeriod from './chartMost/chartPeriod.svelte';
-import Export from './export.svelte';
+
 import { onMount } from 'svelte';
 
 let stDateRange = moment().tz('Asia/Bangkok').format('YYYY-MM-DD'); 
@@ -13,7 +13,6 @@ let setDateFilter = {Start:moment().tz('Asia/Bangkok').clone().add(0, 'days').fo
 let statusLoadTab1 = false
 let DataSetMost = []
 
-let Idexport;
 let NewDataStatus = false
 
     onMount(
@@ -176,7 +175,7 @@ async function GetDataTab1(Start,End){
         console.log('Loaded');
         statusLoadTab1 = true
         DataSetMost = [data]
-        if(Object.keys(data.newData).length !== 0){Idexport = data.newData.infoDv.DvId; NewDataStatus = true}
+
         
         console.log(DataSetMost);
         return data
@@ -380,11 +379,6 @@ function btnRangeCustom() {
 
 
                     <div class="box-2 w-6/12 min-h-full flex flex-col gap-3">
-                         {#if NewDataStatus}
-                         <div class="flex gap-2 justify-end items-center">
-                            <Export DvID={Idexport} />
-                        </div>
-                    {/if}
                         <div class="card w-full h-[50%] flex flex-col justify-between  bg-white p-[0.5rem] rounded-[10px] shadow-[0_0_5px_.5px_#7f7f7fb3]">
                             <h2 class="flex items-center text-2xl  text-sky-500 font-bold">
                             <img
