@@ -194,14 +194,53 @@ function btnRangeCustom() {
 </script>
 
 
-    <section class="container  p-[0.5rem] flex">
+    <section class="w-full h-full p-[0.5rem] flex">
 
        
-            {#if statusLoadTab1 }
-                <div class="w-full min-h-full flex gap-4">
+            {#if statusLoadTab1}
+                <div class="w-full min-h-full flex flex-col gap-4">
+                    <div class="flex w-full items-end justify-end">
+                        <div class={`flex justify-end gap-2 w-full ${valrangeD === 'custom' ? "w-8/12" : "w-3/12"}`}>
+                            <div class="flex flex-col">
+                                <label for="dateRange">date range:</label>
+                                <select name="dateRange" id="dateRange" class="outline-none h-[40px] text-[16px] border-[1px] border-[#468999] rounded-[5px]" on:change={changeRangeDate} bind:value={valrangeD}>
+                                    <option id="7days"  value="7days">last 7 days</option>
+                                    <option id="14days"  value="14days">last 14 days</option>
+                                    <option id="28days"  value="28days">last 28 days</option>
+                                    <option id="Today"  value="Today">Today</option>
+                                    <option id="yesterday"  value="yesterday">yesterday</option>
+                                    <option id="thisMont"  value="thisMonth">this month</option>
+                                    <option id="lastMont"  value="lastMonth">last month</option>
+                                    <option id="thisYea"  value="thisYear">this year</option>
+                                    <option id="lastYea"  value="lastYear">last year</option>
+                                    <option id="custom"  value="custom">custom</option>
+                                </select>
+                            </div>
+                            
+                            {#if valrangeD === 'custom'}
+                                <div class="flex gap-2 bg-slate-100 p-2 rounded-md"  id="dateRangeCustom">
+                                    <div class="flex flex-col">
+                                        <label for="startDate">start Date</label>
+                                        <input type="date" id="startDate" class="outline-none h-[40px] text-[16px] border-[1px] border-[#468999] rounded-[5px]" bind:value={stDateRange} on:change={checkDateEnd001}>
+                                    </div>
+
+                                    <div class="flex flex-col">
+                                        <label for="startDate">End date</label>
+                                        <input type="date" id="endDate" class="outline-none h-[40px] text-[16px] border-[1px] border-[#468999] rounded-[5px]" bind:value={endDateRange} on:change={checkDateEnd001}>
+                                    </div>
+
+                                    <div class="flex flex-col justify-end items-end">
+                                        <div></div>
+                                        <button id="btn-query" class="w-full cursor-pointer bg-[#468999] border-none p-[.25rem] rounded-[.25rem] text-white text-[18px] shadow-[0_0_3px_1px_#4646468e] disabled:cursor-default disabled:bg-[#b7b7b7] disabled:text-[#464646]  hover:bg-[#366b79] hover:text-[#ffffff] hover:shadow-[0_0_3px_1px_#4646468e]"  disabled on:click={(btnRangeCustom)}>filter</button>
+                                    </div>
+
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
                    {#each DataSetMost as Data }   
-                    <div class="box-1 w-6/12 min-h-full  flex flex-col gap-3">
-                          
+                    <div class="flex gap-3">
+
                                 <div class="card w-full h-[12rem] flex flex-col justify-between bg-white p-[0.5rem] rounded-[10px] shadow-[0_0_5px_.5px_#7f7f7fb3]">
                                     <h2 class="flex items-center text-3xl text-[#216b99] font-bold">
                                         <img
@@ -250,127 +289,70 @@ function btnRangeCustom() {
                                 </div>
 
                                 <div class="w-full flex gap-4">
-                                    <div class="numberrr w-6/12 flex flex-col  gap-2">
+                                    <div class="numberrr w-full flex flex-col  gap-2">
                                         <h2 class="flex items-center text-2xl text-[#389625] font-bold">
                                             <img
                                                 src="https://cdn-icons-png.flaticon.com/128/10588/10588422.png" alt=""
                                                 class="w-[40px] mr-2">
                                                 count of detected
                                         </h2>
-                                        {#if Object.keys(Data.newData).length === 0}
-                                        <div class="contentNumberr relative h-[6rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#58cc41] ">
-                                            <div class="w-full flex flex-col gap-2 justify-between absolute bottom-0 p-2">
-                                                <p class="text-[20px] flex items-center">0
-                                                    <span class="text-[16px] text-green-600 font-bold ml-1">
-                                                        not detected!
-                                                        
-                                                    </span>
-                                                </p>
-                                                <p class="w-full flex justify-end text-[14px]">total from range</p>
+                                        <div class="w-full flex gap-2">
+                                            {#if Object.keys(Data.newData).length === 0}
+
+                                            <div class="w-full h-[5rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#58cc41] ">
+                                                <div class="w-full flex flex-col justify-between p-2 pt-5">
+                                                    <p class="text-[20px] flex items-center">
+                                                    <span class="text-[16px] text-green-600 font-bold ml-1">not detected!</span>
+                                                    </p>
+                                                    <p class="w-full flex justify-end text-[12px] mt-2 text-gray-600">total from range</p>
+                                                </div>
                                             </div>
-                                        </div>
-
-
-                                        <div class="contentNumberr relative h-[6rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#bd5626] ">
-                                            <div class="w-full flex flex-col gap-2 justify-between absolute bottom-0 p-2">
-                                                <p class="text-[20px] flex items-center">0
-                                                    <span class="text-[16px] text-green-600 font-bold ml-1">
-                                                        not detected!
-                                                        
-                                                    </span>
-                                                </p>
-                                                <p class="w-full flex justify-end text-[14px]">Today</p>
+                                            <div class="w-full h-[5rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#414fcc] ">
+                                                <div class="w-full flex flex-col justify-between p-2 pt-5">
+                                                    <p class="text-[20px] flex items-center">
+                                                    <span class="text-[16px] text-green-600 font-bold ml-1">not detected!</span>
+                                                    </p>
+                                                    <p class="w-full flex justify-end text-[12px] mt-2 text-gray-600">Today</p>
+                                                </div>
                                             </div>
-                                        </div>
-
-
-                                        <div class="contentNumberr relative h-[6rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#4d1ac5] ">
-                                            <div class="w-full flex flex-col gap-2 justify-between absolute bottom-0 p-2">
-                                                <p class="text-[20px] flex items-center">0
-                                                    <span class="text-[16px] text-green-600 font-bold ml-1">
-                                                        not detected!
-                                                        
-                                                    </span>
-                                                </p>
-                                                <p class="w-full flex justify-end text-[14px]">all</p>
+                                            <div class="w-full h-[5rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#cc418d] ">
+                                                <div class="w-full flex flex-col justify-between p-2 pt-5">
+                                                    <p class="text-[20px] flex items-center">
+                                                    <span class="text-[16px] text-green-600 font-bold ml-1">not detected!</span>
+                                                    </p>
+                                                    <p class="w-full flex justify-end text-[12px] mt-2 text-gray-600">all</p>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        {:else}
+                                            {:else}
 
-                                        <div class="contentNumberr relative h-[6rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#58cc41] ">
-                                            <div class="w-full flex flex-col gap-2 justify-between absolute bottom-0 p-2">
-                                                <p class="text-[18px]">{Data.newData.totalfromRamge}</p>
-                                                <p class="w-full flex justify-end text-[14px]">total from range</p>
+                                            <div class="w-full h-[5rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#414fcc] ">
+                                                <div class="w-full flex flex-col justify-between p-2 pt-5">
+                                                    <p class="text-[18px]">{Data.newData.totalfromRamge}</p>
+                                                    <p class="w-full flex justify-end text-[14px]">total from range</p>
+                                                </div>
                                             </div>
-                                        </div>
 
-
-                                        <div class="contentNumberr relative h-[6rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#bd5626] ">
-                                            <div class="w-full flex flex-col gap-2 justify-between absolute bottom-0 p-2">
-                                                <p class="text-[18px]">{Data.newData.TodayT}</p>
-                                                <p class="w-full flex justify-end text-[14px]">Today</p>
+                                            <div class="w-full h-[5rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#cc418d] ">
+                                                <div class="w-full flex flex-col justify-between p-2 pt-5">
+                                                    <p class="text-[18px]">{Data.newData.TodayT}</p>
+                                                    <p class="w-full flex justify-end text-[14px]">Today</p>
+                                                </div>
                                             </div>
-                                        </div>
 
-
-                                        <div class="contentNumberr relative h-[6rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#4d1ac5] ">
-                                            <div class="w-full flex flex-col gap-2 justify-between absolute bottom-0 p-2">
-                                                <p class="text-[18px]">{Data.newData.TotalAll}</p>
-                                                <p class="w-full flex justify-end text-[14px]">all</p>
+                                            <div class="w-full h-[5rem] shadow-[0_0_5px_1px_#7f7f7fb3] rounded-[.5rem] border-l-[.3rem] border-l-[#58cc41] ">
+                                                <div class="w-full flex flex-col justify-between p-2 pt-5">
+                                                    <p class="text-[18px]">{Data.newData.TotalAll}</p>
+                                                    <p class="w-full flex justify-end text-[14px]">all</p>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        {/if}
+    
+                                            {/if}
+                                        </div>
                                     </div>
 
-                                    <div class="rangeDate w-6/12">
-                                        <h2 class="flex items-center gap-1 text-2xl text-slate-500 font-bold">
-                                            <div class="w-[40px] mr-2 bg-slate-300 p-1 rounded-full flex items-center justify-center">
-                                                <img
-                                                src="https://cdn-icons-png.flaticon.com/128/16056/16056916.png" alt=""
-                                                class="w-[350px] ">
-                                            </div>
-                                            
-                                                date range
-                                        </h2>
-                                       
-                                       
-                                        <div class="flex flex-col">
-                                            <label for="dateRange">date range</label>
-                                            <select name="dateRange" id="dateRange" class="outline-none h-[40px] text-[16px] border-[1px] border-[#468999] rounded-[5px]" on:change={changeRangeDate} bind:value={valrangeD}>
-                                                <option id="7days"  value="7days">last 7 days</option>
-                                                <option id="14days"  value="14days">last 14 days</option>
-                                                <option id="28days"  value="28days">last 28 days</option>
-                                                <option id="Today"  value="Today">Today</option>
-                                                <option id="yesterday"  value="yesterday">yesterday</option>
-                                                <option id="thisMont"  value="thisMonth">this month</option>
-                                                <option id="lastMont"  value="lastMonth">last month</option>
-                                                <option id="thisYea"  value="thisYear">this year</option>
-                                                <option id="lastYea"  value="lastYear">last year</option>
-                                                <option id="custom"  value="custom">custom</option>
-                                            </select>
-                                        </div>
-                                        
 
-                                        {#if valrangeD === 'custom'}
-                                            <div class="flex flex-col"  id="dateRangeCustom">
-
-                                                <div class="flex flex-col">
-                                                    <label for="startDate">start Date</label>
-                                                    <input type="date" id="startDate" class="outline-none h-[40px] text-[16px] border-[1px] border-[#468999] rounded-[5px]" bind:value={stDateRange} on:change={checkDateEnd001}>
-                                                </div>
-
-                                                <div class="flex flex-col">
-                                                    <label for="startDate">End date</label>
-                                                    <input type="date" id="endDate" class="outline-none h-[40px] text-[16px] border-[1px] border-[#468999] rounded-[5px]" bind:value={endDateRange} on:change={checkDateEnd001}>
-                                                </div>
-
-                                                <button id="btn-query" class="w-full cursor-pointer bg-[#468999] border-none p-[.25rem] rounded-[.25rem] text-white text-[18px] shadow-[0_0_3px_1px_#4646468e] mt-3 disabled:cursor-default disabled:bg-[#b7b7b7] disabled:text-[#464646]  hover:bg-[#366b79] hover:text-[#ffffff] hover:shadow-[0_0_3px_1px_#4646468e]"  disabled on:click={(btnRangeCustom)}>filter</button>
-
-                                            </div>
-                                        {/if}
-                                    </div>
                                 </div>
 
                             
@@ -378,8 +360,9 @@ function btnRangeCustom() {
                     </div>
 
 
-                    <div class="box-2 w-6/12 min-h-full flex flex-col gap-3">
-                        <div class="card w-full h-[50%] flex flex-col justify-between  bg-white p-[0.5rem] rounded-[10px] shadow-[0_0_5px_.5px_#7f7f7fb3]">
+                    <div class="flex gap-3">
+                        
+                        <div class="card w-full h-full flex flex-col justify-between  bg-white p-[0.5rem] rounded-[10px] shadow-[0_0_5px_.5px_#7f7f7fb3]">
                             <h2 class="flex items-center text-2xl  text-sky-500 font-bold">
                             <img
                                 src="https://cdn-icons-png.flaticon.com/128/3281/3281306.png" alt=""
@@ -403,12 +386,12 @@ function btnRangeCustom() {
                             <div class="w-2 h-10 bg-transparent"></div>
                         </div>
 
-                        <div class="card w-full h-[50%] flex flex-col justify-between bg-white p-[0.5rem] rounded-[10px] shadow-[0_0_5px_.5px_#7f7f7fb3] mb-2">
+                        <div class="card w-full h-full flex flex-col justify-between bg-white p-[0.5rem] rounded-[10px] shadow-[0_0_5px_.5px_#7f7f7fb3] mb-2">
                             <h2 class="flex items-center text-2xl text-rose-400 font-bold">
                                 <img
                                     src="https://cdn-icons-png.flaticon.com/128/3616/3616111.png" alt=""
                                     class="w-[40px] mr-2">
-                                    detected chart
+                                    time period
                             </h2>
                             {#if Object.keys(Data.newData).length === 0}
 
@@ -424,18 +407,12 @@ function btnRangeCustom() {
                             <div class="w-2 h-5 bg-transparent"></div>
                         </div>
                     </div>
-            {/each}   
-
+                    {/each}   
                 </div>
 
             {:else if statusLoadTab1 === 'error' }
 
                 <div class="w-full h-full flex gap-1 justify-center items-center">
-                    <span class="relative flex h-[2rem] w-[2rem]">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-[2rem] w-[2rem] bg-sky-500"></span>
-                      
-                    </span>
                 <div class="text-2xl text-red-500">An error occurred. Please reload the page.</div>
                     
                 </div>
@@ -450,7 +427,7 @@ function btnRangeCustom() {
                     <div class="text-2xl">loading...</div>
                 </div>
 
-                {/if}
+            {/if}
         
 
 
