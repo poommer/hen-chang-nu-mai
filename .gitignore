@@ -1,2 +1,4 @@
 # ไดเรกทอรีของ dependency
 /node_modules/
+
+/.svelte-kit/
